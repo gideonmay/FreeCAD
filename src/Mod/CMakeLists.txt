@@ -1,3 +1,4 @@
+find_package(PySideTools REQUIRED)
 
 if(BUILD_POINTS)
   add_subdirectory(Points)
