@@ -24,29 +24,29 @@
 #ifndef PART_GEOMETRY_H
 #define PART_GEOMETRY_H
 
-#include <Handle_Geom_CartesianPoint.hxx>
-#include <Handle_Geom_BezierCurve.hxx>
-#include <Handle_Geom_BSplineCurve.hxx>
-#include <Handle_Geom_Circle.hxx>
-#include <Handle_Geom_Ellipse.hxx>
-#include <Handle_Geom_Hyperbola.hxx>
-#include <Handle_Geom_Parabola.hxx>
-#include <Handle_Geom_Line.hxx>
-#include <Handle_Geom_OffsetCurve.hxx>
-#include <Handle_Geom_TrimmedCurve.hxx>
-#include <Handle_Geom_Surface.hxx>
-#include <Handle_Geom_BezierSurface.hxx>
-#include <Handle_Geom_BSplineSurface.hxx>
-#include <Handle_Geom_CylindricalSurface.hxx>
-#include <Handle_Geom_ConicalSurface.hxx>
-#include <Handle_Geom_SphericalSurface.hxx>
-#include <Handle_Geom_ToroidalSurface.hxx>
-#include <Handle_Geom_Plane.hxx>
-#include <Handle_Geom_OffsetSurface.hxx>
-#include <Handle_GeomPlate_Surface.hxx>
-#include <Handle_Geom_RectangularTrimmedSurface.hxx>
-#include <Handle_Geom_SurfaceOfRevolution.hxx>
-#include <Handle_Geom_SurfaceOfLinearExtrusion.hxx>
+#include <Geom_CartesianPoint.hxx>
+#include <Geom_BezierCurve.hxx>
+#include <Geom_BSplineCurve.hxx>
+#include <Geom_Circle.hxx>
+#include <Geom_Ellipse.hxx>
+#include <Geom_Hyperbola.hxx>
+#include <Geom_Parabola.hxx>
+#include <Geom_Line.hxx>
+#include <Geom_OffsetCurve.hxx>
+#include <Geom_TrimmedCurve.hxx>
+#include <Geom_Surface.hxx>
+#include <Geom_BezierSurface.hxx>
+#include <Geom_BSplineSurface.hxx>
+#include <Geom_CylindricalSurface.hxx>
+#include <Geom_ConicalSurface.hxx>
+#include <Geom_SphericalSurface.hxx>
+#include <Geom_ToroidalSurface.hxx>
+#include <Geom_Plane.hxx>
+#include <Geom_OffsetSurface.hxx>
+#include <GeomPlate_Surface.hxx>
+#include <Geom_RectangularTrimmedSurface.hxx>
+#include <Geom_SurfaceOfRevolution.hxx>
+#include <Geom_SurfaceOfLinearExtrusion.hxx>
 #include <GeomPlate_BuildPlateSurface.hxx>
 #include <Plate_Plate.hxx>
 #include <TopoDS_Shape.hxx>
@@ -625,6 +625,7 @@ class PartExport GeomCylinder : public GeomSurface
     TYPESYSTEM_HEADER();
 public:
     GeomCylinder();
+    GeomCylinder(const Handle_Geom_CylindricalSurface&);
     virtual ~GeomCylinder();
     virtual Geometry *clone(void) const;
 
@@ -635,6 +636,7 @@ public:
     // Base implementer ----------------------------
     virtual PyObject *getPyObject(void);
 
+    void setHandle(const Handle_Geom_CylindricalSurface&);
     const Handle_Geom_Geometry& handle() const;
 
 private:
@@ -646,6 +648,7 @@ class PartExport GeomCone : public GeomSurface
     TYPESYSTEM_HEADER();
 public:
     GeomCone();
+    GeomCone(const Handle_Geom_ConicalSurface&);
     virtual ~GeomCone();
     virtual Geometry *clone(void) const;
 
@@ -656,6 +659,7 @@ public:
     // Base implementer ----------------------------
     virtual PyObject *getPyObject(void);
 
+    void setHandle(const Handle_Geom_ConicalSurface&);
     const Handle_Geom_Geometry& handle() const;
 
 private:
@@ -667,6 +671,7 @@ class PartExport GeomSphere : public GeomSurface
     TYPESYSTEM_HEADER();
 public:
     GeomSphere();
+    GeomSphere(const Handle_Geom_SphericalSurface&);
     virtual ~GeomSphere();
     virtual Geometry *clone(void) const;
 
@@ -677,6 +682,7 @@ public:
     // Base implementer ----------------------------
     virtual PyObject *getPyObject(void);
 
+    void setHandle(const Handle_Geom_SphericalSurface&);
     const Handle_Geom_Geometry& handle() const;
 
 private:
@@ -688,6 +694,7 @@ class PartExport GeomToroid : public GeomSurface
     TYPESYSTEM_HEADER();
 public:
     GeomToroid();
+    GeomToroid(const Handle_Geom_ToroidalSurface&);
     virtual ~GeomToroid();
     virtual Geometry *clone(void) const;
 
@@ -698,6 +705,7 @@ public:
     // Base implementer ----------------------------
     virtual PyObject *getPyObject(void);
 
+    void setHandle(const Handle_Geom_ToroidalSurface&);
     const Handle_Geom_Geometry& handle() const;
 
 private:
@@ -709,6 +717,7 @@ class PartExport GeomPlane : public GeomSurface
     TYPESYSTEM_HEADER();
 public:
     GeomPlane();
+    GeomPlane(const Handle_Geom_Plane&);
     virtual ~GeomPlane();
     virtual Geometry *clone(void) const;
 
@@ -719,6 +728,7 @@ public:
     // Base implementer ----------------------------
     virtual PyObject *getPyObject(void);
 
+    void setHandle(const Handle_Geom_Plane&);
     const Handle_Geom_Geometry& handle() const;
 
 private:
@@ -867,6 +877,8 @@ double suggestFilletRadius(const GeomLineSegment *lineSeg1, const GeomLineSegmen
 PartExport
 GeomArcOfCircle *createFilletGeometry(const GeomLineSegment *lineSeg1, const GeomLineSegment *lineSeg2,
                                       const Base::Vector3d &center, double radius);
+PartExport
+GeomSurface *makeFromSurface(const Handle_Geom_Surface&);
 }
 
 #endif // PART_GEOMETRY_H

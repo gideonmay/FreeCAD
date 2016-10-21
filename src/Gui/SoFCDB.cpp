@@ -26,6 +26,8 @@
 # include <Inventor/actions/SoToVRML2Action.h>
 # include <Inventor/VRMLnodes/SoVRMLGroup.h>
 # include <Inventor/VRMLnodes/SoVRMLParent.h>
+# include <Inventor/SbString.h>
+# include <Inventor/nodes/SoGroup.h>
 #endif
 
 #include <Base/FileInfo.h>
@@ -51,6 +53,8 @@
 #include "SoNavigationDragger.h"
 #include "Inventor/SoDrawingGrid.h"
 #include "Inventor/SoAutoZoomTranslation.h"
+#include "Inventor/MarkerBitmaps.h"
+#include "SoFCCSysDragger.h"
 
 #include "propertyeditor/PropertyItem.h"
 #include "NavigationStyle.h"
@@ -62,6 +66,7 @@ using namespace Gui::Inventor;
 using namespace Gui::PropertyEditor;
 
 static SbBool init_done = false;
+static SoGroup *storage = nullptr;
 
 SbBool Gui::SoFCDB::isInitialized(void)
 {
@@ -109,6 +114,8 @@ void Gui::SoFCDB::init()
     SoRegPoint                      ::initClass();
     SoDrawingGrid                   ::initClass();
     SoAutoZoomTranslation           ::initClass();
+    MarkerBitmaps                   ::initClass();
+    SoFCCSysDragger                 ::initClass();
 
     PropertyItem                    ::init();
     PropertySeparatorItem           ::init();
@@ -131,6 +138,8 @@ void Gui::SoFCDB::init()
     PropertyFloatListItem           ::init();
     PropertyIntegerListItem         ::init();
     PropertyColorItem               ::init();
+    PropertyMaterialItem            ::init();
+    PropertyMaterialListItem        ::init();
     PropertyFileItem                ::init();
     PropertyPathItem                ::init();
     PropertyTransientFileItem       ::init();
@@ -156,6 +165,10 @@ void Gui::SoFCDB::init()
     qRegisterMetaType<Base::Quantity>("Base::Quantity");
     qRegisterMetaType<QList<Base::Quantity> >("Base::QuantityList");
     init_done = true;
+    
+    assert(!storage);
+    storage = new SoGroup();
+    storage->ref();
 }
 
 void Gui::SoFCDB::finish()
@@ -177,6 +190,9 @@ void Gui::SoFCDB::finish()
     SoFCEnableHighlightAction       ::finish();
     SoFCSelectionColorAction        ::finish();
     SoFCHighlightColorAction        ::finish();
+    
+    storage->unref();
+    storage = nullptr;
 }
 
 // buffer acrobatics for inventor ****************************************************
@@ -217,6 +233,7 @@ bool Gui::SoFCDB::writeToVRML(SoNode* node, const char* filename, bool binary)
     SoToVRML2Action tovrml2;
     tovrml2.apply(node);
     SoVRMLGroup* vrmlRoot = tovrml2.getVRML2SceneGraph();
+    vrmlRoot->setInstancePrefix(SbString("o"));
     vrmlRoot->ref();
     std::string buffer = SoFCDB::writeNodesToString(vrmlRoot);
     vrmlRoot->unref(); // release the memory as soon as possible
@@ -281,4 +298,10 @@ bool Gui::SoFCDB::writeToFile(SoNode* node, const char* filename, bool binary)
     }
 
     return ret;
+}
+
+SoGroup* Gui::SoFCDB::getStorage()
+{
+  assert(storage); //call init first.
+  return storage;
 }

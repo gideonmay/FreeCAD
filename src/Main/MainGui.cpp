@@ -58,7 +58,7 @@
 
 void PrintInitHelp(void);
 
-const char sBanner[] = "\xc2\xa9 Juergen Riegel, Werner Mayer, Yorik van Havre 2001-2015\n"\
+const char sBanner[] = "\xc2\xa9 Juergen Riegel, Werner Mayer, Yorik van Havre 2001-2016\n"\
 "  #####                 ####  ###   ####  \n" \
 "  #                    #      # #   #   # \n" \
 "  #     ##  #### ####  #     #   #  #   # \n" \
@@ -236,14 +236,16 @@ int main( int argc, char ** argv )
         else
             App::Application::runApplication();
     }
-    catch (const Base::SystemExitException&) {
-        exit(0);
+    catch (const Base::SystemExitException& e) {
+        exit(e.getExitCode());
     }
     catch (const Base::Exception& e) {
-        Base::Console().Error("%s\n", e.what());
+        e.ReportException();
+        exit(1);
     }
     catch (...) {
         Base::Console().Error("Application unexpectedly terminated\n");
+        exit(1);
     }
 
     std::cout.rdbuf(oldcout);

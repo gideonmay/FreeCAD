@@ -150,6 +150,8 @@ public:
     boost::signal<void (const App::Property&)> signalAppendDynamicProperty;
     /// signal on about removing a dynamic property
     boost::signal<void (const App::Property&)> signalRemoveDynamicProperty;
+    /// signal on about changing the editor mode of a property
+    boost::signal<void (const App::Property&)> signalChangePropertyEditor;
     //@}
 
 
@@ -228,7 +230,7 @@ public:
     static void destructObserver(void);
     static void processCmdLineFiles(void);
     static std::list<std::string> getCmdLineFiles();
-    static void processFiles(const std::list<std::string>&);
+    static std::list<std::string> processFiles(const std::list<std::string>&);
     static void runApplication(void);
     friend Application &GetApplication(void);
     static std::map<std::string,std::string> &Config(void){return mConfig;}
@@ -273,7 +275,7 @@ protected:
 
 private:
     /// Constructor
-    Application(ParameterManager *pcSysParamMngr, ParameterManager *pcUserParamMngr,std::map<std::string,std::string> &mConfig);
+    Application(std::map<std::string,std::string> &mConfig);
     /// Destructor
     virtual ~Application();
 
