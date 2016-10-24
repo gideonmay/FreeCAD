@@ -40,6 +40,10 @@ def InitApplications():
 	except ImportError:
 		FreeCAD.Console.PrintError("\n\nSeems the python standard libs are not installed, bailing out!\n\n")
 		raise
+
+	if os.environ.get('FREECAD'):
+		FreeCAD.ConfigSet("AppHomePath", os.environ['FREECAD'])
+
 	# Checking on FreeCAD module path ++++++++++++++++++++++++++++++++++++++++++
 	ModDir = FreeCAD.getHomePath()+'Mod'
 	ModDir = os.path.realpath(ModDir)
